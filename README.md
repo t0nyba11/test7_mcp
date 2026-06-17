@@ -5,7 +5,9 @@ An MCP server that lets MCP clients run Azure DevOps WIQL queries through a loca
 ## Features
 
 - Exposes a `run_wiql` MCP tool.
+- Exposes a `get_work_items` MCP tool for fetching requested fields by ID.
 - Runs WIQL against Azure DevOps Work Item Tracking.
+- Can hydrate WIQL results with full work item fields.
 - Reads authentication only from the current process environment.
 - Stores no credentials and uses no external storage.
 - Works locally with `npm start` or after publishing with `npx`.
@@ -105,15 +107,69 @@ Input:
   "wiql": "SELECT [System.Id], [System.Title] FROM WorkItems WHERE [System.TeamProject] = @project",
   "organizationUrl": "https://dev.azure.com/your-organization",
   "project": "your-project",
+  "includeWorkItems": true,
+  "fields": ["System.Id", "System.Title", "System.State"],
   "top": 100,
   "timePrecision": true,
+  "errorPolicy": "omit",
   "apiVersion": "7.1"
 }
 ```
 
 Only `wiql` is required when `AZURE_DEVOPS_ORG_URL` and `AZURE_DEVOPS_PROJECT` are set.
 
-Output is the Azure DevOps WIQL JSON response.
+By default, output is the raw Azure DevOps WIQL JSON response. Azure DevOps returns only IDs and URLs from WIQL. Set `includeWorkItems` to `true` and pass `fields` to fetch matching work item field values after WIQL returns the IDs.
+
+Hydrated output includes:
+
+```json
+{
+  "wiqlResult": {
+    "workItems": [{ "id": 123, "url": "https://dev.azure.com/..." }]
+  },
+  "workItems": [
+    {
+      "id": 123,
+      "fields": {
+        "System.Id": 123,
+        "System.Title": "Example",
+        "System.State": "Active"
+      }
+    }
+  ],
+  "workItemsResult": {
+    "count": 1,
+    "value": [
+      {
+        "id": 123,
+        "fields": {
+          "System.Id": 123,
+          "System.Title": "Example",
+          "System.State": "Active"
+        }
+      }
+    ]
+  }
+}
+```
+
+### `get_work_items`
+
+Input:
+
+```json
+{
+  "ids": [123, 124],
+  "organizationUrl": "https://dev.azure.com/your-organization",
+  "project": "your-project",
+  "fields": ["System.Id", "System.Title", "System.State"],
+  "errorPolicy": "omit",
+  "expand": "relations",
+  "apiVersion": "7.1"
+}
+```
+
+Only `ids` is required when `AZURE_DEVOPS_ORG_URL` and `AZURE_DEVOPS_PROJECT` are set. The server automatically splits large ID lists into Azure DevOps batch requests of 200 IDs each.
 
 ## Development
 
