@@ -3,7 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { AzureDevOpsService } from "./azureDevOpsService.js";
 
-const contextInputSchema = {
+const azureDevOpsContextInputSchema = {
   organizationUrl: z
     .string()
     .url()
@@ -14,17 +14,6 @@ const contextInputSchema = {
     .min(1)
     .optional()
     .describe("Azure DevOps project name. Defaults to AZURE_DEVOPS_PROJECT."),
-  top: z
-    .number()
-    .int()
-    .positive()
-    .max(20000)
-    .optional()
-    .describe("Maximum number of WIQL rows to return."),
-  timePrecision: z
-    .boolean()
-    .optional()
-    .describe("Whether Azure DevOps should evaluate date/time precision."),
   apiVersion: z
     .string()
     .min(1)
@@ -54,7 +43,7 @@ const workItemFetchOptionsSchema = {
 
 const runWiqlInputSchema = {
   wiql: z.string().min(1).describe("WIQL query to run."),
-  ...contextInputSchema,
+  ...azureDevOpsContextInputSchema,
   ...workItemFetchOptionsSchema,
   includeWorkItems: z
     .boolean()
@@ -78,7 +67,7 @@ const getWorkItemsInputSchema = {
     .array(z.number().int().positive())
     .min(1)
     .describe("Azure DevOps work item IDs to fetch."),
-  ...contextInputSchema,
+  ...azureDevOpsContextInputSchema,
   ...workItemFetchOptionsSchema
 };
 

@@ -116,7 +116,7 @@ Input:
 }
 ```
 
-Only `wiql` is required when `AZURE_DEVOPS_ORG_URL` and `AZURE_DEVOPS_PROJECT` are set.
+For tool input, only `wiql` is required when `AZURE_DEVOPS_ORG_URL` and `AZURE_DEVOPS_PROJECT` are set. At runtime, the server also requires either `AZURE_DEVOPS_PAT` or `AZURE_DEVOPS_BEARER_TOKEN`.
 
 By default, output is the raw Azure DevOps WIQL JSON response. Azure DevOps returns only IDs and URLs from WIQL. Set `includeWorkItems` to `true` and pass `fields` to fetch matching work item field values after WIQL returns the IDs.
 
@@ -169,7 +169,7 @@ Input:
 }
 ```
 
-Only `ids` is required when `AZURE_DEVOPS_ORG_URL` and `AZURE_DEVOPS_PROJECT` are set. The server automatically splits large ID lists into Azure DevOps batch requests of 200 IDs each.
+For tool input, only `ids` is required when `AZURE_DEVOPS_ORG_URL` and `AZURE_DEVOPS_PROJECT` are set. At runtime, the server also requires either `AZURE_DEVOPS_PAT` or `AZURE_DEVOPS_BEARER_TOKEN`. The server automatically splits large ID lists into Azure DevOps batch requests of 200 IDs each.
 
 ## Development
 
