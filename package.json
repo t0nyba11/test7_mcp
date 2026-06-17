@@ -1,0 +1,34 @@
+{
+  "name": "azure-devops-wiql-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for running Azure DevOps WIQL queries.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "azure-devops-wiql-mcp-server": "./src/index.js",
+    "azure-devops-wiql-mcp": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node ./src/index.js",
+    "check": "node --check ./src/index.js && node --check ./src/server.js && node --check ./src/azureDevOpsService.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.76"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "azure-devops",
+    "wiql"
+  ]
+}
